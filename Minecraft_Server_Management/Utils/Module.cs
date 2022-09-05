@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,16 +8,23 @@ using Renci.SshNet;
 
 namespace Minecraft_Server_Management.Module
 {
-    internal class Module
+    public class HostConfig
+    {
+        public string? Host { get; set; }
+        public string? User { get; set; }
+        public string? Passwd { get; set; }
+        public int Port { get; set; }
+        public int? PortChangeCheck { get; set; }
+        public int? AutoLogin { get; set; }
+    }
+    class Module
     {
         public static SshClient? Conn_SSH(string host, string user, string passwd, int port = 22)
         {
-            SshClient? client;
+            SshClient? client = new(host, port, user, passwd); ;
 
             try
             {
-                client = new(host, port, user, passwd);
-
                 client.Connect();
 
                 return client;
@@ -24,18 +32,26 @@ namespace Minecraft_Server_Management.Module
 
             catch(Exception e)
             {
-                client = null;
                 MessageBox.Show($"[Error Connect] {e}");
             }
 
             return client;
         }
 
-        public static void SendCMD(SshClient client, string data)
+        public static string SendCMD(SshClient client, string data)
         {
             SshCommand sshCMD = client.CreateCommand(data);
 
-            sshCMD.BeginExecute();
+            var asyncCMD = sshCMD.BeginExecute();
+
+            while(!asyncCMD.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
+
+            var result = sshCMD.EndExecute(asyncCMD);
+
+            return result;
         }
     }
 }

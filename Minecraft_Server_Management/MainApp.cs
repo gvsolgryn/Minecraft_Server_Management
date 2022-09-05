@@ -5,6 +5,10 @@ namespace Minecraft_Server_Management
         public MainApp()
         {
             InitializeComponent();
+
+            var hostSettingForm = new HostSetting();
+
+            hostSettingForm.ShowDialog();
         }
     }
 }
