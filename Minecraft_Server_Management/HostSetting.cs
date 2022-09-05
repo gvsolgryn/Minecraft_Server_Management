@@ -63,12 +63,20 @@ namespace Minecraft_Server_Management
             var configFileInfo = new FileInfo(configPath + @"hostConfig.json");
 
             var hostConfig = JsonConvert.DeserializeObject<HostConfig>(File.ReadAllText(configFileInfo.ToString()));
+
+            if (hostConfig is null)
+            {
+                Debug.WriteLine("[HostSetting] hostConfig is null");
+
+                return;
+            }
         }
 
         private void HostSetting_Load(object sender, EventArgs e)
         {
             Config_Dir_Check();
             Config_File_Check();
+            HostConfig_Check();
         }
 
         private void ChangePortBox_CheckedChanged(object sender, EventArgs e)
