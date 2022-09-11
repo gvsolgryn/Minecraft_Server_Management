@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.viewPasswdBox = new System.Windows.Forms.CheckBox();
+            this.cancelBtn = new System.Windows.Forms.Button();
+            this.LoginBtn = new System.Windows.Forms.Button();
             this.AutoLoginBox = new System.Windows.Forms.CheckBox();
             this.ChangePortBox = new System.Windows.Forms.CheckBox();
             this.portTextBox = new System.Windows.Forms.TextBox();
@@ -46,8 +47,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.viewPasswdBox);
+            this.groupBox1.Controls.Add(this.cancelBtn);
+            this.groupBox1.Controls.Add(this.LoginBtn);
             this.groupBox1.Controls.Add(this.AutoLoginBox);
             this.groupBox1.Controls.Add(this.ChangePortBox);
             this.groupBox1.Controls.Add(this.portTextBox);
@@ -65,28 +67,40 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Server Config";
             // 
-            // button2
+            // viewPasswdBox
             // 
-            this.button2.Location = new System.Drawing.Point(279, 170);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
+            this.viewPasswdBox.AutoSize = true;
+            this.viewPasswdBox.Location = new System.Drawing.Point(248, 138);
+            this.viewPasswdBox.Name = "viewPasswdBox";
+            this.viewPasswdBox.Size = new System.Drawing.Size(106, 19);
+            this.viewPasswdBox.TabIndex = 10;
+            this.viewPasswdBox.Text = "View Password";
+            this.viewPasswdBox.UseVisualStyleBackColor = true;
+            this.viewPasswdBox.CheckedChanged += new System.EventHandler(this.ViewPasswdBox_CheckedChanged);
             // 
-            // button1
+            // cancelBtn
             // 
-            this.button1.Location = new System.Drawing.Point(198, 170);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Login";
-            this.button1.UseVisualStyleBackColor = true;
+            this.cancelBtn.Location = new System.Drawing.Point(279, 170);
+            this.cancelBtn.Name = "cancelBtn";
+            this.cancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.cancelBtn.TabIndex = 12;
+            this.cancelBtn.Text = "Cancel";
+            this.cancelBtn.UseVisualStyleBackColor = true;
+            // 
+            // LoginBtn
+            // 
+            this.LoginBtn.Location = new System.Drawing.Point(198, 170);
+            this.LoginBtn.Name = "LoginBtn";
+            this.LoginBtn.Size = new System.Drawing.Size(75, 23);
+            this.LoginBtn.TabIndex = 11;
+            this.LoginBtn.Text = "Login";
+            this.LoginBtn.UseVisualStyleBackColor = true;
+            this.LoginBtn.Click += new System.EventHandler(this.LoginBtn_Click);
             // 
             // AutoLoginBox
             // 
             this.AutoLoginBox.AutoSize = true;
-            this.AutoLoginBox.Location = new System.Drawing.Point(268, 145);
+            this.AutoLoginBox.Location = new System.Drawing.Point(156, 138);
             this.AutoLoginBox.Name = "AutoLoginBox";
             this.AutoLoginBox.Size = new System.Drawing.Size(86, 19);
             this.AutoLoginBox.TabIndex = 9;
@@ -96,7 +110,7 @@
             // ChangePortBox
             // 
             this.ChangePortBox.AutoSize = true;
-            this.ChangePortBox.Location = new System.Drawing.Point(169, 145);
+            this.ChangePortBox.Location = new System.Drawing.Point(57, 138);
             this.ChangePortBox.Name = "ChangePortBox";
             this.ChangePortBox.Size = new System.Drawing.Size(93, 19);
             this.ChangePortBox.TabIndex = 8;
@@ -127,6 +141,7 @@
             // 
             this.passwdTextBox.Location = new System.Drawing.Point(99, 80);
             this.passwdTextBox.Name = "passwdTextBox";
+            this.passwdTextBox.PasswordChar = '●';
             this.passwdTextBox.Size = new System.Drawing.Size(255, 23);
             this.passwdTextBox.TabIndex = 5;
             // 
@@ -205,7 +220,8 @@
         private TextBox hostTextBox;
         private CheckBox ChangePortBox;
         private CheckBox AutoLoginBox;
-        private Button button2;
-        private Button button1;
+        private Button cancelBtn;
+        private Button LoginBtn;
+        private CheckBox viewPasswdBox;
     }
 }

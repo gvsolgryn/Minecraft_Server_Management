@@ -21,7 +21,7 @@ namespace Minecraft_Server_Management.Module
     {
         public static SshClient? Conn_SSH(string host, string user, string passwd, int port = 22)
         {
-            SshClient? client = new(host, port, user, passwd); ;
+            SshClient? client = new(host, port, user, passwd);
 
             try
             {

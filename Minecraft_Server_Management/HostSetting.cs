@@ -57,7 +57,7 @@ namespace Minecraft_Server_Management
             }
         }
 
-        private void HostConfig_Check()
+        private static void HostConfig_Check()
         {
             var configPath = new DirectoryInfo(Application.StartupPath + @"config\");
             var configFileInfo = new FileInfo(configPath + @"hostConfig.json");
@@ -72,16 +72,50 @@ namespace Minecraft_Server_Management
             }
         }
 
+        private void AutoLogin_Check()
+        {
+            var configPath = new DirectoryInfo(Application.StartupPath + @"config\");
+            var configFileInfo = new FileInfo(configPath + @"hostConfig.json");
+
+            var hostConfig = JsonConvert.DeserializeObject<HostConfig>(File.ReadAllText(configFileInfo.ToString()));
+
+            if (hostConfig is null)
+            {
+                Debug.WriteLine("[HostSetting] hostConfig is null");
+
+                return;
+            }
+
+            if (hostConfig.AutoLogin is 1)
+            {
+                Debug.WriteLine("[HostSetting] Auto Login On");
+
+
+            }
+        }
+
         private void HostSetting_Load(object sender, EventArgs e)
         {
             Config_Dir_Check();
             Config_File_Check();
             HostConfig_Check();
+            AutoLogin_Check();
         }
 
         private void ChangePortBox_CheckedChanged(object sender, EventArgs e)
         {
             portTextBox.Enabled = ChangePortBox.Checked;
+        }
+
+
+        private void ViewPasswdBox_CheckedChanged(object sender, EventArgs e)
+        {
+            passwdTextBox.PasswordChar = viewPasswdBox.Checked ? '0' : '●';
+        }
+
+        private void LoginBtn_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
