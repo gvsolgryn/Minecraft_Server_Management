@@ -8,6 +8,15 @@ using Renci.SshNet;
 
 namespace Minecraft_Server_Management.Module
 {
+    public class DefaultConfig
+    {
+        public string? Host { get; set; } = "127.0.0.1 or user.host.name";
+        public string? User { get; set; } = "username";
+        public string? Passwd { get; set; } = "password";
+        public int Port { get; set; } = 22;
+        public int? PortChangeCheck { get; set; } = 0;
+        public int? AutoLogin { get; set; } = 0;
+    }
     public class HostConfig
     {
         public string? Host { get; set; }
@@ -16,7 +25,7 @@ namespace Minecraft_Server_Management.Module
         public int Port { get; set; }
         public int? PortChangeCheck { get; set; }
         public int? AutoLogin { get; set; }
-    }
+    }   
     class Module
     {
         public static SshClient? Conn_SSH(string host, string user, string passwd, int port = 22)

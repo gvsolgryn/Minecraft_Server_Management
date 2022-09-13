@@ -40,20 +40,16 @@ namespace Minecraft_Server_Management
                 AutoLogin = 0
             };
 
-            var Config2Json = new JObject(
-                new JProperty("Host", hostConfig.Host),
-                new JProperty("User", hostConfig.User),
-                new JProperty("Passwd", hostConfig.Passwd),
-                new JProperty("Port", hostConfig.Port),
-                new JProperty("PortChangeCheck", hostConfig.PortChangeCheck),
-                new JProperty("AutoLogin", hostConfig.AutoLogin)
-                );
+            var testList = new List<Object>();
+
+            testList.Add(hostConfig);
 
             if (!configFileInfo.Exists)
             {
-                Debug.WriteLine("[HostSetting] Config file is not found\nCreate file");
+                MessageBox.Show("[HostSetting] Config file is not found\nCreate file");
 
-                File.WriteAllText(configFileInfo.ToString(), Config2Json.ToString());
+                //File.WriteAllText(configFileInfo.ToString(), JsonConvert.SerializeObject(hostConfig, Formatting.Indented));
+                File.WriteAllText(configFileInfo.ToString(), JsonConvert.SerializeObject(testList, Formatting.Indented));
             }
         }
 
@@ -62,11 +58,13 @@ namespace Minecraft_Server_Management
             var configPath = new DirectoryInfo(Application.StartupPath + @"config\");
             var configFileInfo = new FileInfo(configPath + @"hostConfig.json");
 
-            var hostConfig = JsonConvert.DeserializeObject<HostConfig>(File.ReadAllText(configFileInfo.ToString()));
+            MessageBox.Show(configFileInfo.ToString(), "DBG");
+
+            var hostConfig = JsonConvert.DeserializeObject<List<HostConfig>>(File.ReadAllText(configFileInfo.ToString()));
 
             if (hostConfig is null)
             {
-                Debug.WriteLine("[HostSetting] hostConfig is null");
+                MessageBox.Show("[HostSetting] hostConfig is null");
 
                 return;
             }
@@ -77,20 +75,22 @@ namespace Minecraft_Server_Management
             var configPath = new DirectoryInfo(Application.StartupPath + @"config\");
             var configFileInfo = new FileInfo(configPath + @"hostConfig.json");
 
-            var hostConfig = JsonConvert.DeserializeObject<HostConfig>(File.ReadAllText(configFileInfo.ToString()));
+            var hostConfig = JsonConvert.DeserializeObject<List<HostConfig>>(File.ReadAllText(configFileInfo.ToString()));
 
             if (hostConfig is null)
             {
-                Debug.WriteLine("[HostSetting] hostConfig is null");
+                MessageBox.Show("[HostSetting] hostConfig is null");
 
                 return;
             }
 
-            if (hostConfig.AutoLogin is 1)
+            var thisConfig = hostConfig.FirstOrDefault();
+
+            if (thisConfig is not null && thisConfig.AutoLogin == 0)
             {
-                Debug.WriteLine("[HostSetting] Auto Login On");
+                MessageBox.Show("[HostSetting] Auto Login OFF");
 
-
+                Debug.WriteLine($"[HostSetting] TEST : {thisConfig}");
             }
         }
 
