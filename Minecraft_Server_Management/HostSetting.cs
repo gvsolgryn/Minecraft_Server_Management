@@ -9,19 +9,22 @@ namespace Minecraft_Server_Management
 {
 	public partial class HostSetting : Form
 	{
+		readonly Module.Module module = new();
+		SshClient? client;
+
 		public HostSetting()
 		{
 			InitializeComponent();
 		}
 
-        static readonly DirectoryInfo configPath = new(Application.StartupPath + @"config\");
-        static readonly FileInfo configFileInfo = new(configPath + @"hostConfig.json");
+		static readonly DirectoryInfo configPath = new(Application.StartupPath + @"config\");
+		static readonly FileInfo configFileInfo = new(configPath + @"hostConfig.json");
 
-        private static void Config_Dir_Check()
+		private static void Config_Dir_Check()
 		{
 			if (!configPath.Exists)
 			{
-				Debug.WriteLine("[HostSetting] Config path is not found\nCreate Directory");
+				Debug.WriteLine("Config path is not found\nCreate Directory", "HostSetting");
 				configPath.Create();
 			}
 		}
@@ -34,52 +37,48 @@ namespace Minecraft_Server_Management
 				User = "username",
 				Passwd = "password",
 				Port = 22,
-				PortChangeCheck = 0,
-				AutoLogin = 0
-			};
-
-			var firstDataList = new List<Object>
-			{
-				hostConfig
+				PortChangeCheck = 0
 			};
 
 			if (!configFileInfo.Exists)
 			{
-				MessageBox.Show("[HostSetting] Config file is not found\nCreate file");
+				MessageBox.Show("Config file is not found\nCreate file", "HostSetting");
 
-				File.WriteAllText(configFileInfo.ToString(), JsonConvert.SerializeObject(firstDataList, Formatting.Indented));
+				File.WriteAllText(configFileInfo.ToString(), JsonConvert.SerializeObject(hostConfig, Formatting.Indented));
 			}
 		}
 
 		private static void HostConfig_Check()
 		{
-			var hostConfig = JsonConvert.DeserializeObject<List<HostConfig>>(File.ReadAllText(configFileInfo.ToString()));
+			var hostConfig = JsonConvert.DeserializeObject<HostConfig>(File.ReadAllText(configFileInfo.ToString()));
 
 			if (hostConfig is null)
 			{
-				MessageBox.Show("[HostSetting] hostConfig is null");
+				MessageBox.Show("hostConfig is null", "HostSetting");
 
 				return;
 			}
 		}
 
-		private void AutoLogin_Check()
+		private void ChangeLoginTextBox()
 		{
-			var hostConfig = JsonConvert.DeserializeObject<List<HostConfig>>(File.ReadAllText(configFileInfo.ToString()));
+            var hostConfig = JsonConvert.DeserializeObject<HostConfig>(File.ReadAllText(configFileInfo.ToString()));
 
 			if (hostConfig is null)
 			{
-				MessageBox.Show("[HostSetting] hostConfig is null");
-
+				MessageBox.Show("hostconfig is null", "HostSetting");
 				return;
 			}
 
-			var thisConfig = hostConfig.FirstOrDefault();
+			hostTextBox.Text = hostConfig.Host;
+			userTextBox.Text = hostConfig.User;
+			portTextBox.Text = hostConfig.Port.ToString();
+			ChangePortBox.CheckState = hostConfig.PortChangeCheck == 0 ? CheckState.Unchecked: CheckState.Checked;
+        }
 
-			if (thisConfig is not null && thisConfig.AutoLogin == 0)
-			{
-				MessageBox.Show("[HostSetting] Auto Login OFF");
-			}
+		private static void ChangeJsonConfig(HostConfig hostConfig)
+		{
+			File.WriteAllText(configFileInfo.ToString(), JsonConvert.SerializeObject(hostConfig, Formatting.Indented));
 		}
 
 		private void HostSetting_Load(object sender, EventArgs e)
@@ -87,7 +86,7 @@ namespace Minecraft_Server_Management
 			Config_Dir_Check();
 			Config_File_Check();
 			HostConfig_Check();
-			AutoLogin_Check();
+			ChangeLoginTextBox();
 		}
 
 		private void ChangePortBox_CheckedChanged(object sender, EventArgs e)
@@ -102,22 +101,39 @@ namespace Minecraft_Server_Management
 		}
 
 		private void LoginBtn_Click(object sender, EventArgs e)
-		{
-			var hostConfig = new HostConfig
-			{
-				Host = hostTextBox.Text,
-				User = userTextBox.Text,
-				Passwd = passwdTextBox.Text,
-				Port = Int32.Parse(portTextBox.Text),
-				PortChangeCheck = ChangePortBox.Checked ? 1 : 0,
-				AutoLogin = AutoLoginBox.Checked ? 1 : 0
+        {
+            var hostConfig = new HostConfig
+            {
+                Host = hostTextBox.Text,
+                User = userTextBox.Text,
+                Passwd = passwdTextBox.Text,
+                Port = Int32.Parse(portTextBox.Text),
+                PortChangeCheck = ChangePortBox.Checked ? 1 : 0
             };
-			
-			SshClient? client = ChangePortBox.Checked ?
-				Module.Module.Conn_SSH(hostConfig.Host, hostConfig.User, hostConfig.Passwd, hostConfig.Port)
-				:
-				Module.Module.Conn_SSH(hostConfig.Host, hostConfig.User, hostConfig.Passwd);
-		}
+
+            client = ChangePortBox.Checked ?
+                module.Conn_SSH(hostConfig.Host, hostConfig.User, hostConfig.Passwd, hostConfig.Port)
+                :
+                module.Conn_SSH(hostConfig.Host, hostConfig.User, hostConfig.Passwd);
+
+            if(client is null)
+			{
+				MessageBox.Show("SSH Client is null", "Connection Error");
+				return;
+			}
+
+            if (!client.IsConnected)
+            {
+				MessageBox.Show("Connect fail", "Connection Error");
+                return;
+            }
+
+            ChangeJsonConfig(hostConfig);
+
+            var cmdResult = Module.Module.SendCMD(client, "uname -a");
+
+			Console.WriteLine($"{cmdResult}");
+        }
 
         private void CancelBtn_Click(object sender, EventArgs e)
         {
