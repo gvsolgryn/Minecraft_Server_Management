@@ -32,7 +32,6 @@
             this.viewPasswdBox = new System.Windows.Forms.CheckBox();
             this.cancelBtn = new System.Windows.Forms.Button();
             this.LoginBtn = new System.Windows.Forms.Button();
-            this.AutoLoginBox = new System.Windows.Forms.CheckBox();
             this.ChangePortBox = new System.Windows.Forms.CheckBox();
             this.portTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -50,7 +49,6 @@
             this.groupBox1.Controls.Add(this.viewPasswdBox);
             this.groupBox1.Controls.Add(this.cancelBtn);
             this.groupBox1.Controls.Add(this.LoginBtn);
-            this.groupBox1.Controls.Add(this.AutoLoginBox);
             this.groupBox1.Controls.Add(this.ChangePortBox);
             this.groupBox1.Controls.Add(this.portTextBox);
             this.groupBox1.Controls.Add(this.label4);
@@ -98,20 +96,10 @@
             this.LoginBtn.UseVisualStyleBackColor = true;
             this.LoginBtn.Click += new System.EventHandler(this.LoginBtn_Click);
             // 
-            // AutoLoginBox
-            // 
-            this.AutoLoginBox.AutoSize = true;
-            this.AutoLoginBox.Location = new System.Drawing.Point(156, 138);
-            this.AutoLoginBox.Name = "AutoLoginBox";
-            this.AutoLoginBox.Size = new System.Drawing.Size(86, 19);
-            this.AutoLoginBox.TabIndex = 9;
-            this.AutoLoginBox.Text = "Auto Login";
-            this.AutoLoginBox.UseVisualStyleBackColor = true;
-            // 
             // ChangePortBox
             // 
             this.ChangePortBox.AutoSize = true;
-            this.ChangePortBox.Location = new System.Drawing.Point(57, 138);
+            this.ChangePortBox.Location = new System.Drawing.Point(149, 138);
             this.ChangePortBox.Name = "ChangePortBox";
             this.ChangePortBox.Size = new System.Drawing.Size(93, 19);
             this.ChangePortBox.TabIndex = 8;
@@ -220,7 +208,6 @@
         private Label label2;
         private TextBox hostTextBox;
         private CheckBox ChangePortBox;
-        private CheckBox AutoLoginBox;
         private Button cancelBtn;
         private Button LoginBtn;
         private CheckBox viewPasswdBox;
